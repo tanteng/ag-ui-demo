@@ -1,6 +1,9 @@
 # AG-UI Protocol Demo
 
-基于 AG-UI 官方协议的流式事件演示项目。
+基于 AG-UI 官方协议的流式事件演示项目，支持完整的 Server-Sent Events 事件流。
+
+[![AG-UI Protocol](https://img.shields.io/badge/Protocol-AG--UI-blue)](https://docs.ag-ui.com)
+[![Go Version](https://img.shields.io/badge/Go-1.18+-00ADD8?style=flat&logo=go)](https://go.dev)
 
 ## 功能特性
 
