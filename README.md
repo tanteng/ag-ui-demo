@@ -40,13 +40,13 @@ cp .env.example .env
 ### 3. 运行
 
 ```bash
-# 方式一：直接运行
+# Go 版本（推荐）
 export AG_UI_API_KEY=your-api-key
 go run server.go
 
-# 方式二：读取 .env 文件
-source .env
-go run server.go
+# 或者 Node.js 版本（需要先安装依赖）
+npm install
+node server.js
 ```
 
 ### 4. 访问
