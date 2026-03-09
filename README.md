@@ -15,10 +15,15 @@
 
 ## 快速开始
 
+### 前置要求
+
+- Go 1.18+
+- API Key（硅基流动 / OpenAI / Claude）
+
 ### 1. 克隆项目
 
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:tanteng/ag-ui-demo.git
 cd ag-ui-demo
 ```
 
@@ -35,11 +40,11 @@ cp .env.example .env
 ### 3. 运行
 
 ```bash
-# 方法一: 直接运行
+# 方式一：直接运行
 export AG_UI_API_KEY=your-api-key
 go run server.go
 
-# 方法二: 使用 .env 文件
+# 方式二：读取 .env 文件
 source .env
 go run server.go
 ```
@@ -73,7 +78,7 @@ ag-ui-demo/
 ### 任务执行
 
 ```bash
-curl -X POST http://localhost:3000/api/task/stream \
+curl -N -X POST http://localhost:3000/api/task/stream \
   -H "Content-Type: application/json" \
   -d '{"goal":"写一个登录功能"}'
 ```
@@ -81,10 +86,85 @@ curl -X POST http://localhost:3000/api/task/stream \
 ### 决策分析
 
 ```bash
-curl "http://localhost:3000/api/decision/stream?goal=选择哪个云服务器"
+curl -N "http://localhost:3000/api/decision/stream?goal=选择哪个云服务器"
+```
+
+## 事件流示例
+
+完整的 AG-UI 事件序列：
+
+```
+1. RUN_STARTED        → 任务开始
+2. REASONING_START    → 开始推理
+3. TEXT_MESSAGE_START → 消息开始
+4. REASONING_MESSAGE_CONTENT → 推理内容（流式）
+5. REASONING_MESSAGE_END → 推理结束
+6. STEP_STARTED/STEP_FINISHED → 执行步骤
+7. TEXT_MESSAGE_CONTENT → 最终结果（流式）
+8. TEXT_MESSAGE_END → 消息结束
+9. RUN_FINISHED → 任务完成
+```
+
+## 事件类型说明
+
+| 事件类型 | 说明 |
+|---------|------|
+| RUN_STARTED | 任务开始 |
+| RUN_FINISHED | 任务完成 |
+| RUN_ERROR | 任务错误 |
+| STEP_STARTED | 步骤开始 |
+| STEP_FINISHED | 步骤完成 |
+| TEXT_MESSAGE_START | 文本消息开始 |
+| TEXT_MESSAGE_CONTENT | 文本消息内容（流式） |
+| TEXT_MESSAGE_END | 文本消息结束 |
+| REASONING_START | 推理开始 |
+| REASONING_MESSAGE_CONTENT | 推理内容（流式） |
+| REASONING_END | 推理结束 |
+| TOOL_CALL_START | 工具调用开始 |
+| TOOL_CALL_ARGS | 工具参数（流式） |
+| TOOL_CALL_END | 工具调用结束 |
+| TOOL_CALL_RESULT | 工具结果 |
+
+## 部署
+
+### Docker（可选）
+
+```dockerfile
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o server .
+
+FROM alpine
+RUN apk --no-cache add ca-certificates
+WORKDIR /app
+COPY --from=builder /app/server .
+EXPOSE 3000
+CMD ["./server"]
+```
+
+### Systemd 服务
+
+```ini
+# /etc/systemd/system/ag-ui.service
+[Unit]
+Description=AG-UI Demo Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ag-ui-demo
+Environment=AG_UI_API_KEY=your-api-key
+ExecStart=/home/ubuntu/ag-ui-demo/server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 ## 参考文档
 
 - [AG-UI 官方文档](https://docs.ag-ui.com)
 - [AG-UI GitHub](https://github.com/ag-ui-protocol/ag-ui)
+- [AG-UI 协议规范](https://docs.ag-ui.com/concepts/events)
