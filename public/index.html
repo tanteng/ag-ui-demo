@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AG UI & A2UI 协议演示</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 20px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 10px; font-size: 2rem; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    
+    .demo-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .demo-section h2 { color: #00d4ff; margin-bottom: 16px; font-size: 1.3rem; }
+    .demo-section p { color: #aaa; margin-bottom: 16px; }
+    
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: #00d4ff;
+      color: #000;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .badge.a2ui { background: #ffc800; }
+    
+    /* 传统 UI 对比 */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .comparison-box {
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .comparison-box.traditional {
+      background: rgba(255,100,100,0.1);
+      border: 1px solid rgba(255,100,100,0.3);
+    }
+    .comparison-box.agui {
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.3);
+    }
+    .comparison-box h3 { margin-bottom: 12px; }
+    .comparison-box.traditional h3 { color: #ff6b6b; }
+    .comparison-box.agui h3 { color: #00d4ff; }
+    .comparison-box ul { list-style: none; text-align: left; font-size: 14px; }
+    .comparison-box li { padding: 6px 0; color: #aaa; }
+    .comparison-box li::before { content: "✗ "; color: #ff6b6b; margin-right: 8px; }
+    .comparison-box.agui li::before { content: "✓ "; color: #00d4ff; }
+    
+    /* AG UI 特点 */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .feature {
+      flex: 1 1 200px;
+      padding: 16px;
+      background: rgba(0,212,255,0.05);
+      border-radius: 10px;
+      border-left: 3px solid #00d4ff;
+    }
+    .feature h4 { color: #00d4ff; margin-bottom: 8px; font-size: 15px; }
+    .feature p { font-size: 13px; color: #888; margin: 0; }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 16px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background: #1e1e2e;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    input[type="text"]:focus { outline: none; border-color: #00d4ff; }
+    
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-primary { background: #00d4ff; color: #000; font-weight: 600; }
+    .btn-primary:hover { background: #00b8e6; transform: translateY(-2px); }
+    
+    /* 目标展示 */
+    .goal-display {
+      padding: 16px;
+      background: rgba(0,212,255,0.1);
+      border-radius: 10px;
+      margin: 16px 0;
+      border-left: 4px solid #00d4ff;
+    }
+    .goal-display .label { font-size: 12px; color: #00d4ff; text-transform: uppercase; letter-spacing: 1px; }
+    .goal-display .goal { font-size: 18px; margin-top: 8px; }
+    
+    /* 步骤进度 */
+    .steps {
+      margin: 20px 0;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.3s;
+    }
+    .step.active { background: rgba(0,212,255,0.15); }
+    .step.completed { opacity: 0.6; }
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .step.completed .step-number { background: #00d4ff; color: #000; }
+    .step.active .step-number { background: #ffc800; color: #000; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .step-text { flex: 1; }
+    .step-status { font-size: 12px; color: #888; }
+    .step.completed .step-status { color: #00d4ff; }
+    .step.active .step-status { color: #ffc800; }
+    
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(0,212,255,0.1);
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+    }
+    .result h3 { color: #00d4ff; margin-bottom: 12px; }
+    .result p { color: #ccc; line-height: 1.6; }
+    
+    .a2ui-panel {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(255,200,0,0.1);
+      border-radius: 10px;
+      border-left: 4px solid #ffc800;
+    }
+    .a2ui-panel h3 { color: #ffc800; margin-bottom: 12px; }
+    .confidence-bar {
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffc800, #ff6b6b);
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 4px 4px 4px 0;
+    }
+    .alternative {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    .alternative-name { color: #fff; }
+    .alternative-score { color: #ffc800; font-weight: bold; }
+    
+    .note {
+      padding: 12px 16px;
+      background: rgba(255,200,0,0.1);
+      border-radius: 8px;
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 AG UI & A2UI 协议演示</h1>
+    <p class="subtitle">Agentic UI + Agent-to-User Interface</p>
+    
+    <!-- AG UI 特点说明 -->
+    <div class="demo-section">
+      <h2>📌 AG-UI 协议核心</h2>
+      <div class="features">
+        <div class="feature">
+          <h4>🔄 事件驱动</h4>
+          <p>标准化的 Server-Sent Events (SSE) 实时推送</p>
+        </div>
+        <div class="feature">
+          <h4>📝 标准化事件</h4>
+          <p>统一的事件类型：RUN_*、STEP_*、TEXT_MESSAGE_*、TOOL_CALL_*</p>
+        </div>
+        <div class="feature">
+          <h4>🧠 推理可见</h4>
+          <p>REASONING_* 事件让 AI 思考过程透明化</p>
+        </div>
+        <div class="feature">
+          <h4>🔧 工具调用</h4>
+          <p>TOOL_CALL_* 事件支持 AI 调用外部工具</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AG UI Demo -->
+    <div class="demo-section">
+      <span class="badge">AG UI</span>
+      <h2>目标导向的任务委托</h2>
+      <p>不再一步步点击操作，只需描述你的目标，AI 自动完成所有步骤。</p>
+      
+      <input type="text" id="goalInput" placeholder="例如：帮我分析上季度的销售数据并生成报告..." />
+      <button class="btn-primary" onclick="executeTask()">🚀 执行任务 (SSE流式)</button>
+      
+      <div id="aguiResult" style="display:none;"></div>
+      
+      <!-- 调试区域 -->
+      <div id="debugEvents" style="margin-top:20px;max-height:200px;overflow-y:auto;background:rgba(0,0,0,0.5);padding:10px;border-radius:8px;display:none;"></div>
+    </div>
+    
+    <!-- A2UI Demo -->
+    <div class="demo-section">
+      <span class="badge a2ui">A2UI</span>
+      <h2>透明的决策过程</h2>
+      <p>AI 不仅给出结果，还展示决策依据、备选方案和置信度。</p>
+      
+      <input type="text" id="decisionInput" placeholder="例如：哪个云服务器性价比最高？" />
+      <button class="btn-primary" style="background:#ffc800;color:#000;" onclick="showDecision()">
+        🔍 分析决策 (SSE流式)
+      </button>
+      
+      <div id="a2uiResult" style="display:none;"></div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "ag-ui-demo",
+  "version": "1.0.0",
+  "description": "AG UI & A2UI 协议演示",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
