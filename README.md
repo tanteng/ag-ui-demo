@@ -161,5 +161,3 @@ WantedBy=multi-user.target
 ## 参考文档
 
 - [AG-UI 官方文档](https://docs.ag-ui.com)
-- [AG-UI GitHub](https://github.com/ag-ui-protocol/ag-ui)
-- [AG-UI 协议规范](https://docs.ag-ui.com/concepts/events)
