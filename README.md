@@ -40,13 +40,8 @@ cp .env.example .env
 ### 3. 运行
 
 ```bash
-# Go 版本（推荐）
 export AG_UI_API_KEY=your-api-key
 go run server.go
-
-# 或者 Node.js 版本（需要先安装依赖）
-npm install
-node server.js
 ```
 
 ### 4. 访问
@@ -67,8 +62,8 @@ ag-ui-demo/
 ├── server.go          # Go 后端 (符合 AG-UI 协议)
 ├── public/
 │   ├── index.html    # 前端页面
-│   └── app.js        # 前端逻辑
-├── .env.example     # 环境变量模板
+│   └── app.js       # 前端逻辑
+├── .env.example      # 环境变量模板
 ├── .gitignore
 └── README.md
 ```
